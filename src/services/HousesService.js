@@ -1,3 +1,4 @@
+import { BadRequest } from "@bcwdev/auth0provider/lib/Errors.js";
 import { dbContext } from "../db/DbContext.js"
 
 class HousesService {
@@ -8,6 +9,9 @@ class HousesService {
 
   async getHouseById(houseId) {
     const house = await dbContext.Houses.findById(houseId).populate('creator')
+    if (house == null) {
+      throw new BadRequest(`${houseId} is not a valid house ID`);
+    }
     return house
   }
 

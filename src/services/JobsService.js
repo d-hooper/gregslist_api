@@ -1,3 +1,4 @@
+import { BadRequest } from "@bcwdev/auth0provider/lib/Errors.js"
 import { dbContext } from "../db/DbContext.js"
 
 class JobsService {
@@ -32,6 +33,9 @@ class JobsService {
 
   async getJobById(jobId) {
     const job = await dbContext.Jobs.findById(jobId)
+    if (job == null) {
+      throw new BadRequest(`${jobId} is not a valid job ID`);
+    }
     return job
   }
 }

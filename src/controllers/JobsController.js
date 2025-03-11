@@ -31,8 +31,12 @@ export class JobsController extends BaseController {
   * @param {import("express").NextFunction} next
   */
   async getJobById(request, response, next) {
-    const jobId = request.params.jobId
-    const job = await jobsService.getJobById(jobId)
-    response.send(job)
+    try {
+      const jobId = request.params.jobId
+      const job = await jobsService.getJobById(jobId)
+      response.send(job)
+    } catch (error) {
+      next(error)
+    }
   }
 }
