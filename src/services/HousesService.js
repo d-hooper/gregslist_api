@@ -2,17 +2,38 @@ import { dbContext } from "../db/DbContext.js"
 
 class HousesService {
   async getAllHouses() {
-    const houses = await dbContext.Houses.find()
+    const houses = await dbContext.Houses.find().populate('creator')
     return houses
   }
 
   async getHouseById(houseId) {
-    const house = await dbContext.Houses.findById(houseId)
+    const house = await dbContext.Houses.findById(houseId).populate('creator')
     return house
   }
 
   async getHousesByQuery(houseQuery) {
+    const pageNum = houseQuery.page || 1
+    delete houseQuery.page
 
+    const houseLimit = 10
+    const skipBy = (pageNum - 1) * houseLimit
+
+    const houseCount = await dbContext.Houses.countDocuments(houseQuery)
+    const totalPages = Math.ceil(houseCount / houseLimit)
+
+    const houses = await dbContext.Houses
+      .find(houseQuery)
+      .limit(houseLimit)
+      .skip(skipBy)
+      .populate('creator')
+
+    const toReturn = {
+      houses,
+      houseCount,
+      totalPages
+    }
+
+    return toReturn
   }
 }
 
