@@ -10,6 +10,10 @@ class HousesService {
     const house = await dbContext.Houses.findById(houseId)
     return house
   }
+
+  async getHousesByQuery(houseQuery) {
+
+  }
 }
 
 export const housesService = new HousesService()
