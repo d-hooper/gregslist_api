@@ -25,6 +25,10 @@ class HousesService {
     const sortBy = houseQuery.sortBy
     delete houseQuery.sortBy
 
+    const searchBy = houseQuery.searchBy
+    delete houseQuery.searchBy
+    if (searchBy) houseQuery.description = { $regex: new RegExp(searchBy, 'ig') }
+
     const houseCount = await dbContext.Houses.countDocuments(houseQuery)
     const totalPages = Math.ceil(houseCount / houseLimit)
 
