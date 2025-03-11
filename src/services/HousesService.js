@@ -18,6 +18,9 @@ class HousesService {
     const houseLimit = 10
     const skipBy = (pageNum - 1) * houseLimit
 
+    const sortBy = houseQuery.sortBy
+    delete houseQuery.sortBy
+
     const houseCount = await dbContext.Houses.countDocuments(houseQuery)
     const totalPages = Math.ceil(houseCount / houseLimit)
 
@@ -25,6 +28,7 @@ class HousesService {
       .find(houseQuery)
       .limit(houseLimit)
       .skip(skipBy)
+      .sort(sortBy)
       .populate('creator')
 
     const toReturn = {
